@@ -67,15 +67,14 @@ elif [[ $datatype == "float8" ]]; then
 fi
 
 OPTION_LATENCY_P=" --gpu-memory-utilization 0.9 --enforce-eager "
-OPTION_LATENCY_D=" --gpu-memory-utilization 0.9 --num-scheduler-steps 16"
+OPTION_LATENCY_D=" --gpu-memory-utilization 0.9 "
 OPTION_THROUGHPUT=" --gpu-memory-utilization 0.9 --num-scheduler-steps 16 "
 
 # latency conditions
-Bat="1 2 4 8 16 32 64 128 256"
-InLatency="1024 2048 4096 8192 16384 32768"
+#Bat="1 2 4 8 16 32 64 128 256"
+Bat="1 2 4"
 #InLatency="128 2048"
-OutLatency=
-#OutLatency="128"
+OutLatency="128"
 
 # throughput conditions
 Req_In_Out=("30000:128:128" "3000:2048:128" "3000:128:2048" "1500:2048:2048")
