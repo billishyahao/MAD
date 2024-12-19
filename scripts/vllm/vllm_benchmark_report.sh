@@ -72,10 +72,12 @@ OPTION_THROUGHPUT=" --gpu-memory-utilization 0.9 --num-scheduler-steps 16 "
 
 # latency conditions
 Bat="1 2 4 8 16 32 64 128 256"
+#Bat="1 2 4 "
 InLatency="1024 2048 4096 8192 16384 32768"
 #InLatency="128 2048"
-OutLatency=
-#OutLatency="128"
+#InLatency=
+#OutLatency=
+OutLatency="128"
 
 # throughput conditions
 Req_In_Out=("30000:128:128" "3000:2048:128" "3000:128:2048" "1500:2048:2048")
@@ -102,7 +104,7 @@ if [ "$scenario" == "latency" ] || [ "$scenario" == "all" ]; then
             outjson=${report_dir}/${model_name}_${mode}_decoding_bs${bat}_in${inp}_out${out}_${datatype}.json
             outcsv=${report_summary_dir}/${model_name}_${mode}_report.csv
             echo $model $mode $bat $tp $inp $out
-            python3 $tool_latency --model $model --load-format dummy --batch-size $bat -tp $tp --input-len $inp --output-len $out --num-iters-warmup $n_warm --num-iters $n_itr --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_LATENCY_P
+            python3 $tool_latency --model $model --load-format dummy --max-model-len 36000 --batch-size $bat -tp $tp --input-len $inp --output-len $out --num-iters-warmup $n_warm --num-iters $n_itr --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_LATENCY_P
             python3 $tool_report --mode $mode --model $model_name --batch-size $bat --tp $tp --input-len $inp --output-len $out --input-json $outjson --output-csv $outcsv --dtype $datatype
         done
     done
@@ -114,7 +116,7 @@ if [ "$scenario" == "latency" ] || [ "$scenario" == "all" ]; then
             outjson=${report_dir}/${model_name}_${mode}_decoding_bs${bat}_in${inp}_out${out}_${datatype}.json
             outcsv=${report_summary_dir}/${model_name}_${mode}_report.csv
             echo $model $mode $bat $tp $inp $out
-            python3 $tool_latency --model $model --load-format dummy --batch-size $bat -tp $tp --input-len $inp --output-len $out --num-iters-warmup $n_warm --num-iters $n_itr --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_LATENCY_D
+            python3 $tool_latency --model $model --load-format dummy --max-model-len 36000 --batch-size $bat -tp $tp --input-len $inp --output-len $out --num-iters-warmup $n_warm --num-iters $n_itr --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_LATENCY_D
             python3 $tool_report --mode $mode --model $model_name --batch-size $bat --tp $tp --input-len $inp --output-len $out --input-json $outjson --output-csv $outcsv --dtype $datatype
         done
     done
@@ -131,7 +133,7 @@ if [ "$scenario" == "throughput" ] || [ "$scenario" == "all" ]; then
         outjson=${report_dir}/${model_name}_${mode}_req${req}_in${inp}_out${out}_${datatype}.json
         outcsv=${report_summary_dir}/${model_name}_${mode}_report.csv
         echo $model $mode $req $tp $inp $out
-        python3 $tool_throughput --model $model --load-format dummy --num-prompts $req -tp $tp --input-len $inp --output-len $out --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_THROUGHPUT
+        python3 $tool_throughput --model $model --load-format dummy --max-model-len 36000 --num-prompts $req -tp $tp --input-len $inp --output-len $out --trust-remote-code --output-json $outjson $DTYPE $DIST_BE $OPTION_THROUGHPUT
         python3 $tool_report --mode $mode --model $model_name --num-prompts $req --tp $tp --input-len $inp --output-len $out --input-json $outjson --output-csv $outcsv --dtype $datatype
     done
 fi
